@@ -19,6 +19,8 @@ I built this API to demo work on a social media API handling users, posts, and s
   ## Usage
   this software has CRUD functionality for both Users and a system of posts called Thoughts, along with a system for storing friends and thoughts belonging to a user through arrays of ids, and a system of reactions to thoughts, limited in size and stored as a subdoc. to intergrate into a front end you will need to copy the code files into a repo, and ensure you use the proper syntax when calling.
 
+  link to video of successful fetch requests: https://drive.google.com/file/d/1uXKkObejMAX07Rm3I0LLryIwSzDJLdHq/view 
+
   ## How to Contribute
     to contribute, simply fork and PR and I will look it over. Always open to outside contribution
 
