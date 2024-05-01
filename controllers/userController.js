@@ -66,8 +66,12 @@ module.exports = {
           {_id: req.params.userId},
           {$push: {friends: req.params.friendId}}
         );
+        if (!user) {
+          return res.status(404).json({ message: 'No user with that ID' });
+        }
 
-        res.json(update);
+
+        res.json(user);
       } catch (err) {
         res.status(500).json(err);
       }
@@ -81,7 +85,7 @@ module.exports = {
         {$pull: {friends: req.params.friendId}}
         );
 
-        res.json({message: update, removedId: removed});
+        res.json(user);
       } catch (err) {
         res.status(500).json(err);
       }
