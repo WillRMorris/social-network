@@ -1,100 +1,138 @@
-import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import * as React from 'react';
+import Button from '@mui/material/Button';
+import CssBaseline from '@mui/material/CssBaseline';
+import TextField from '@mui/material/TextField';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import Checkbox from '@mui/material/Checkbox';
+import Link from '@mui/material/Link';
+import Grid from '@mui/material/Grid';
+import Box from '@mui/material/Box';
+import Typography from '@mui/material/Typography';
+import Container from '@mui/material/Container';
+import { createTheme, ThemeProvider } from '@mui/material/styles';
 
-import { useMutation } from '@apollo/client';
-import { ADD_USER } from '../utils/mutations';
+import {useMutation} from '@apollo/client';
+import {ADD_USER} from '../utils/mutations';
 
 import Auth from '../utils/auth';
 
-const Signup = () => {
-  const [formState, setFormState] = useState({
-    username: '',
-    email: '',
-    password: '',
-  });
-  const [addUser, { error, data }] = useMutation(ADD_USER);
+const darkTheme = createTheme({
+  palette: {
+    mode: 'dark',
+  },
+  typography: {
+    fontFamily: [
+      'Pixelify Sans',
+      'normal'
+    ].join(',')
+  }
+});
 
-  const handleChange = (event) => {
-    const { name, value } = event.target;
+export default function SignUp() {
 
-    setFormState({
-      ...formState,
-      [name]: value,
-    });
-  };
+  const [addUser, {error, data}] = useMutation(ADD_USER);
 
-  const handleFormSubmit = async (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
-    console.log(formState);
+    const inputData = new FormData(event.currentTarget);
+    const username = inputData.get('username');
+    if(!username){
+      alert("Username is required");
+      return;
+    }
 
-    try {
-      const { data } = await addUser({
-        variables: { ...formState },
-      });
+    const email = inputData.get('email');
+    if(!email){
+      alert("Email is required");
+      return;
+    }
+
+    const password = inputData.get("password");
+    if(!password){
+      alert("Password is required");
+      return;
+    }
+
+    try{
+      const {data} = await addUser({
+        variables: {
+          username: username,
+          email: email,
+          password: password
+        }
+      })
 
       Auth.login(data.addUser.token);
-    } catch (e) {
+    }
+    catch(e){
       console.error(e);
     }
   };
 
   return (
-    <main className="flex-row justify-center mb-4">
-      <div className="col-12 col-lg-10">
-        <div className="card">
-          <h4 className="card-header bg-dark text-light p-2">Sign Up</h4>
-          <div className="card-body">
-            {data ? (
-              <p>
-                Success! You may now head{' '}
-                <Link to="/">back to the homepage.</Link>
-              </p>
-            ) : (
-              <form onSubmit={handleFormSubmit}>
-                <input
-                  className="form-input"
-                  placeholder="Your username"
+  
+      <Container component="main" maxWidth="xs">
+
+        <Box
+          sx={{
+            marginTop: 8,
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+          }}
+        >
+          <Typography component="h1" variant="h5" style={{ fontSize: "30px" }}>
+            Sign up
+          </Typography>
+          <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 3 }}>
+            <Grid container spacing={2}>
+              <Grid item xs={12}>
+                <TextField
+                  autoComplete="given-name"
                   name="username"
-                  type="text"
-                  value={formState.name}
-                  onChange={handleChange}
+                  required
+                  fullWidth
+                  id="username"
+                  label="Username"
+                  autoFocus
                 />
-                <input
-                  className="form-input"
-                  placeholder="Your email"
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  required
+                  fullWidth
+                  id="email"
+                  label="Email Address"
                   name="email"
-                  type="email"
-                  value={formState.email}
-                  onChange={handleChange}
+                  autoComplete="email"
                 />
-                <input
-                  className="form-input"
-                  placeholder="******"
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  required
+                  fullWidth
                   name="password"
+                  label="Password"
                   type="password"
-                  value={formState.password}
-                  onChange={handleChange}
+                  id="password"
+                  autoComplete="new-password"
                 />
-                <button
-                  className="btn btn-block btn-primary"
-                  style={{ cursor: 'pointer' }}
-                  type="submit"
-                >
-                  Submit
-                </button>
-              </form>
-            )}
+              </Grid>
 
-            {error && (
-              <div className="my-3 p-3 bg-danger text-white">
-                {error.message}
-              </div>
-            )}
-          </div>
-        </div>
-      </div>
-    </main>
+            </Grid>
+            <Button style={{ fontSize: "15px" }}
+              type="submit"
+              fullWidth
+              variant="contained"
+              sx={{ mt: 3, mb: 2 }}
+            >
+              Sign Up
+            </Button>
+            {error ? <div style={{textAlign:"left", fontSize:"25px"}}>{error.message}</div>:null}
+            <Grid container justifyContent="flex-end">
+            </Grid>
+          </Box>
+        </Box>
+      </Container>
   );
-};
-
-export default Signup;
+}

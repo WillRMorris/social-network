@@ -19,12 +19,12 @@ const userSchema = new Schema({
     required: true,
     minlength: 5,
   },
-  thoughts: [
-    {
-      type: Schema.Types.ObjectId,
-      ref: 'Thought',
-    },
-  ],
+  // This value is never displayed so it is never converted into a readable date
+  // The value stays in milliseconds for easier math
+  lastUpdate: {
+    type: Number,
+    default: 0,
+  }
 });
 
 userSchema.pre('save', async function (next) {
@@ -39,6 +39,12 @@ userSchema.pre('save', async function (next) {
 userSchema.methods.isCorrectPassword = async function (password) {
   return bcrypt.compare(password, this.password);
 };
+
+// this method is called whenever a pixel is updated by the user
+userSchema.methods.updateTime = function(){
+  this.lastUpdate = Date.now();
+  this.save();
+}
 
 const User = model('User', userSchema);
 

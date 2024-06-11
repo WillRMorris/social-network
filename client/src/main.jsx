@@ -2,12 +2,10 @@ import ReactDOM from 'react-dom/client';
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 
 import App from './App.jsx';
+import ErrorPage from './pages/Error.jsx';
 import Home from './pages/Home';
-import Signup from './pages/Signup';
-import Login from './pages/Login';
-import SingleThought from './pages/SingleThought';
-import Profile from './pages/Profile';
-import ErrorPage from './pages/ErrorPage';
+import SignUp from './pages/SignUp.jsx';
+import SignIn from './pages/Login.jsx'
 
 const router = createBrowserRouter([
   {
@@ -18,21 +16,14 @@ const router = createBrowserRouter([
       {
         index: true,
         element: <Home />
-      }, {
+      },
+      {
         path: '/login',
-        element: <Login />
-      }, {
+        element: <SignIn />
+      },
+      {
         path: '/signup',
-        element: <Signup />
-      }, {
-        path: '/profiles/:username',
-        element: <Profile />
-      }, {
-        path: '/me',
-        element: <Profile />
-      }, {
-        path: '/thoughts/:thoughtId',
-        element: <SingleThought />
+        element: <SignUp />
       }
     ]
   },
