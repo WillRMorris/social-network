@@ -1,4 +1,4 @@
-import {Container} from '@mui/material';
+import {Container, Box} from '@mui/material';
 import {
   ApolloClient,
   InMemoryCache,
