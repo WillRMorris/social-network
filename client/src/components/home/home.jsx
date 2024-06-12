@@ -8,14 +8,21 @@ const HomePage = () => {
         <>
             <Header>
             </Header>
-            <Grid Container>
-                <Grid item xs={0} md={4}>
+            <Grid Container spacing={1}>
+                <Grid item xs={0} md={3}>
 
                 </Grid>
-                <Grid item xs={0} md={4}>
+                <Divider orientation='vertical' flexItem sx={{ bgcolor: 'primary.dark' }}></Divider>
+
+                
+                {/* main body */}
+                <Grid item xs={12} md={6} container>
 
                 </Grid>
-                <Grid item xs={0} md={4}>
+
+
+                <Divider orientation='vertical' flexItem sx={{ bgcolor: 'primary.dark' }}></Divider>
+                <Grid item xs={0} md={3}>
 
                 </Grid>
             </Grid>
