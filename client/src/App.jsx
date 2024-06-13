@@ -41,7 +41,7 @@ const [colorMode, setColorMode] = useState('dark');
     palette: {
       mode: `${colorMode}`,
       primary: {
-        main: '#01161E',
+        main: '#189ada',
       },
       secondary: {
         main: '#AEC3B0',
