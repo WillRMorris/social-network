@@ -1,4 +1,4 @@
-import {Container, Box} from '@mui/material';
+
 import {
   ApolloClient,
   InMemoryCache,
@@ -11,7 +11,7 @@ import CssBaseline from '@mui/material/CssBaseline';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import { useState } from 'react'
 
-import {useEffect} from 'react';
+import { useEffect } from 'react';
 
 const httpLink = createHttpLink({
   uri: '/graphql',
@@ -34,7 +34,7 @@ const client = new ApolloClient({
 
 
 function App() {
-const [colorMode, setColorMode] = useState('dark');
+  const [colorMode, setColorMode] = useState('dark');
 
   //MUI dark mode base line 
   let darkTheme = createTheme({
@@ -54,23 +54,23 @@ const [colorMode, setColorMode] = useState('dark');
         },
       }
 
-    //   fontFamily: [
-    //     'Pixelify Sans',
-    //     'normal'
-    //   ].join(',')
+      //   fontFamily: [
+      //     'Pixelify Sans',
+      //     'normal'
+      //   ].join(',')
     }
   });
 
   darkTheme = createTheme(darkTheme);
-  useEffect(() =>{
-    
-  },[])
+  useEffect(() => {
+
+  }, [])
 
   return (
     <ApolloProvider client={client}>
       <ThemeProvider theme={darkTheme}>
-      <CssBaseline/>
-          <Outlet />
+        <CssBaseline />
+        <Outlet />
       </ThemeProvider>
     </ApolloProvider>
   );

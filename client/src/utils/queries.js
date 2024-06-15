@@ -6,40 +6,19 @@ export const QUERY_USER = gql`
       _id
       username
       email
-      thoughts {
-        _id
-        thoughtText
-        createdAt
-      }
+      chatList
     }
   }
 `;
 
-export const COMMENTS = gql`
+export const MESSAGES = gql`
 query Query {
-  comments {
+  messages {
     commentText
     commentAuthor
     createdAt
   }
 }
-`;
-
-export const QUERY_SINGLE_THOUGHT = gql`
-  query getSingleThought($thoughtId: ID!) {
-    thought(thoughtId: $thoughtId) {
-      _id
-      thoughtText
-      thoughtAuthor
-      createdAt
-      comments {
-        _id
-        commentText
-        commentAuthor
-        createdAt
-      }
-    }
-  }
 `;
 
 export const QUERY_ME = gql`
@@ -48,24 +27,36 @@ export const QUERY_ME = gql`
       _id
       username
       email
-      thoughts {
-        _id
-        thoughtText
-        thoughtAuthor
-        createdAt
-      }
+      chatList
     }
   }
 `;
 
-export const PIXELS = gql`
-  query Pixels {
-    pixels {
+export const CHATS = gql`
+query Chats {
+  chats {
+    _id
+    chatName
+    lastMessage {
+      messageText
+      messageAuthor
+      createdAt
       _id
-      pixelColor
-      placementUser
-      coordinates
-      updatedAt
+    }
+    lastUpdate
+    users
+  }
+}
+`
+export const CHAT = gql`
+  query chat ($chatId: ID) {
+    chat (chatId: $chatId) {
+      _id
+      users
+      chatName
+      history
+      lastMessage
+      lastUpdate
     }
   }
 `

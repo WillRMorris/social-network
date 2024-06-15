@@ -24,46 +24,36 @@ export const ADD_USER = gql`
   }
 `;
 
-export const ADD_THOUGHT = gql`
-  mutation addThought($thoughtText: String!) {
-    addThought(thoughtText: $thoughtText) {
+export const ADD_MESSAGE = gql`
+  mutation addMessage($chatId: ID!, $messageText: String!) {
+    addMessage(chatId: $chatId, messageText: $messageText) {
       _id
-      thoughtText
-      thoughtAuthor
+      messageText
+      messageAuthor
       createdAt
-      comments {
-        _id
-        commentText
-      }
     }
   }
 `;
 
-export const ADD_COMMENT = gql`
-  mutation addComment($thoughtId: ID!, $commentText: String!) {
-    addComment(thoughtId: $thoughtId, commentText: $commentText) {
-      _id
-      thoughtText
-      thoughtAuthor
-      createdAt
-      comments {
-        _id
-        commentText
-        createdAt
-      }
-    }
+export const REMOVE_MESSAGE = gql`
+ mutation removeMessage($messageId: ID!, $chatId: ID!) {
+  removeMessage(messageId: $messageId, chatId: $chatId) {
+    _id
+    messageText
+    messageAuthor
+    createdAt
   }
-`;
+}`;
 
-export const  UPDATE_PIXEL = gql`
-mutation Mutation($coordinates: [Int]!, $pixelColor: String!, $placementUser: String!) {
-  updatePixel(coordinates: $coordinates, pixelColor: $pixelColor, placementUser: $placementUser) {
-    token
-    user {
+export const CREATE_CHAT = gql`
+  mutation createChat($users: [String]) {
+    createChat(users: $users){
       _id
+      users
+      chatName
+      history
       lastUpdate
-      username
+      lastMessage
     }
   }
-}
-`
+`;

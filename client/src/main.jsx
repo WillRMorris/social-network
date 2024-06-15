@@ -8,6 +8,8 @@ import SignUp from './pages/SignUp.jsx';
 import SignIn from './pages/Login.jsx';
 import Profile from './pages/settings/profile.jsx';
 import Account from './pages/settings/account.jsx';
+import MessageDirectory from './pages/messaging/MessageDirectory.jsx';
+import DirectMessage from './pages/messaging/DirectMessage.jsx';
 
 const router = createBrowserRouter([
   {
@@ -34,6 +36,14 @@ const router = createBrowserRouter([
       {
         path: '/profile',
         element: <Profile />
+      },
+      {
+        path: '/Messages',
+        element: <MessageDirectory />
+      },
+      {
+        path: '/Messages/chatId',
+        element: <DirectMessage />
       }
     ]
   },

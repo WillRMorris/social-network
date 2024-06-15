@@ -19,6 +19,13 @@ const userSchema = new Schema({
     required: true,
     minlength: 5,
   },
+
+  chatList: [
+    {
+      type: Schema.Types.ObjectId,
+      ref: 'Chat'
+    }
+  ],
   // This value is never displayed so it is never converted into a readable date
   // The value stays in milliseconds for easier math
   lastUpdate: {

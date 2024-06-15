@@ -1,22 +1,21 @@
-import React, { useState, useEffect, useRef } from 'react';
-import Auth from '../utils/auth';
-import {socket} from '../socket';
+import React, { useState, useEffect, useRef, } from 'react';
+import Auth from '../../utils/auth';
+import {socket} from '../../socket';
 import { useQuery} from '@apollo/client';
-
-import {COMMENTS} from '../utils/queries';
-
-import {List, ListItemText, Divider, Collapse, Grid, TextField, Button} from '@mui/material';
+import { CHAT} from '../../utils/queries';
+import {useParams} from 'react-router-dom';
+import {List, ListItemText, Divider, Grid, TextField, Button} from '@mui/material';
 
 
 const chatStyle ={
-    backgroundColor: "#2d3e50",
+    bgcolor: "divider",
     overflow: "auto",
-    maxHeight: "500px",
+    maxHeight: '80%',
     padding: "0rem"
 }
 
 const chatTabStyle={
-    backgroundColor: "#2d3e50",
+    bgolor: "secondary.main",
     padding: 0,
     alignItems: "center",
     justifyContent: "center"
@@ -26,9 +25,13 @@ const Chat = ({socket}) => {
     const [message, setMessage] = useState('');
     const [chat, setChat] = useState([]);
     const [name, setName] = useState('');
-    const [showChat, setShowChat] = useState(false);
     const scrollRef = useRef(null);
-    const {loading, error, data} = useQuery(COMMENTS);
+    const {chatId} = useParams();
+    const {loading, error, data} = useQuery(CHAT, {
+        variables: {
+            chatId: chatId
+        }
+    });
 
     if(!Auth.loggedIn()){
         return null;
@@ -37,8 +40,8 @@ const Chat = ({socket}) => {
     useEffect(() => {
         if(data){
             let oldChat = [];
-            for(let i = 0; i < data.comments.length; i++){
-                oldChat.push(`${data.comments[i].commentAuthor}: ${data.comments[i].commentText}`)
+            for(let i = 0; i < data.chat.history.length; i++){
+                oldChat.push(`${data.chat.history[i].commentAuthor}: ${data.chat.history[i].commentText}`)
             }
             oldChat.reverse();
             setChat(oldChat);
@@ -55,10 +58,10 @@ const Chat = ({socket}) => {
             setChat(chat => [...chat, `${data.name}: ${data.message}`])
         });
         socket.on('user-connected', (name) => {
-            setChat(chat => [...chat, `${name} connected`]);
+            setChat(chat => [...chat, `${name} active`]);
         });
         socket.on('user-disconnected', (name) => {
-            setChat(chat => [...chat, `${name} disconnected`]);
+            setChat(chat => [...chat, `${name} inactive`]);
         });
     }, []);
 
@@ -75,17 +78,11 @@ const Chat = ({socket}) => {
         if (scrollRef.current) {
           scrollRef.current.scrollIntoView({ behavior: "smooth" });
         }
-    }, [chat, showChat]);
-
-    const toggleChat = () =>{
-        setShowChat(!showChat);
-    }
+    }, [data]);
 
     return (
-        <div style={{ position: 'fixed', bottom: 0, left: 0, width: '300px', border: '1px solid #ccc', background: '#2d3e50' }}>
-            <Button sx={{width: "100%", padding: 0, backgroundColor: "#2d3e50", color: "white"}} onClick={toggleChat}>{showChat ? "Close Chat": "Open Chat"}</Button>
+        <>
             <List sx={chatStyle}>
-                <Collapse in={showChat} timeout={0} onEntered={() => scrollRef.current.scrollIntoView({behavior: "instant"})}>
                     {chat.map((msg, index) => (
                         <div key={index}>
                             <ListItemText sx={{margin: "0.5rem"}}>{msg}</ListItemText>
@@ -93,7 +90,6 @@ const Chat = ({socket}) => {
                         </div>
                     ))}
                     <li ref={scrollRef}/>
-                </Collapse>
             </List>
             <Grid container id="send-container" sx={chatTabStyle}>
                 <Grid item xs={9}>
@@ -109,7 +105,7 @@ const Chat = ({socket}) => {
                     <Button sx={{backgroundColor: "#2d3e50", margin: "0.2rem", color:"white"}} onClick={sendMessage}>Send</Button>
                 </Grid>
             </Grid>
-        </div>
+        </>
     );
 };
 
