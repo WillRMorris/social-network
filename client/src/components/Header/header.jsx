@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import { Box, Toolbar } from '@mui/material';
 import AppBar from '@mui/material/AppBar';
 import IconButton from '@mui/material/IconButton';
@@ -14,11 +15,11 @@ import AdbIcon from '@mui/icons-material/Adb';
 import auth from '../../utils/auth';
 
 const pages = ['Messages', 'Pricing', 'Blog'];
-const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
+const settings = ['Profile', 'Account', 'Dashboard',];
 
 function Header() {
   const [anchorElNav, setAnchorElNav] = useState(null);
-  const [anchorElUser, setAnchorElUser] =useState(null);
+  const [anchorElUser, setAnchorElUser] = useState(null);
 
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
@@ -35,14 +36,10 @@ function Header() {
     setAnchorElUser(null);
   };
 
-  const handlePageChange = (e) => {
-    setAnchorElUser(null);
-    if(e.target.textContent != 'Logout') {
-      window.location.assign(`/${e.target.textContent}`)
-    } else{
-      auth.logout();
+  const handleLogOut = () =>{
+    if(auth.loggedIn()){
+      auth.logout()
     }
-
   }
 
   return (
@@ -53,7 +50,7 @@ function Header() {
           <Typography
             variant="h6"
             noWrap
-            href = ""
+            href=""
             component="a"
             sx={{
               mr: 2,
@@ -69,13 +66,14 @@ function Header() {
           </Typography>
           <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
             {pages.map((page) => (
-              <Button
-                key={page}
-                onClick={handlePageChange}
-                sx={{ my: 2, color: 'white', display: 'block' }}
-              >
-                {page}
-              </Button>
+              <Link  to ={`/${page}`} style={{ textDecoration: 'none' }}>
+                <Button
+                  key={page}
+                  sx={{ my: 2, color: 'text.primary', display: 'block' }}
+                >
+                  {page}
+                </Button>
+              </Link>
             ))}
           </Box>
 
@@ -109,9 +107,11 @@ function Header() {
               }}
             >
               {pages.map((page) => (
-                <MenuItem key={page} onClick={handlePageChange}>
-                  <Typography textAlign="center">{page}</Typography>
-                </MenuItem>
+                <Link to={`/${page}`} style={{ textDecoration: 'none' }}>
+                  <MenuItem key={page} sx={{ color: 'text.primary' }}>
+                    <Typography textAlign="center">{page}</Typography>
+                  </MenuItem>
+                </Link>
               ))}
             </Menu>
           </Box>
@@ -158,10 +158,15 @@ function Header() {
               onClose={handleCloseUserMenu}
             >
               {settings.map((setting) => (
-                <MenuItem key={setting} onClick={handlePageChange}>
-                  <Typography textAlign="center">{setting}</Typography>
-                </MenuItem>
+                <Link to={`/${setting}`} style={{ textDecoration: 'none' }}>
+                  <MenuItem key={setting} sx={{ color: 'text.primary' }}>
+                    <Typography textAlign="center">{setting}</Typography>
+                  </MenuItem>
+                </Link>
               ))}
+              <MenuItem sx={{ color: 'text.primary' }}>
+                <Typography textAlign="center" onClick={handleLogOut}>Logout</Typography>
+              </MenuItem>
             </Menu>
           </Box>
         </Toolbar>

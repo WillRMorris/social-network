@@ -13,10 +13,6 @@ function MessageDirectory() {
     const [list, setList] = useState([]);
     const { loading, data, error } = useQuery(CHATS);
 
-    const GoBack = (e) =>{
-        window.location.assign('/');
-    }
-
     useEffect(() => {
         if (data) {
             setList(data.chats);
@@ -53,7 +49,9 @@ function MessageDirectory() {
                     <AppBar borderRadius={2} position="static" disableGutters>
                         <Container maxWidth='xl' disableGutters>
                             <Box mx={1} my={2}>
+                                <Link to={'/'}>
                                 <ArrowBackIcon sx={{ width: '3rem', height: '2rem' }} onClick = {GoBack}></ArrowBackIcon>
+                                </Link>
                             </Box>
                         </Container>
                     </AppBar>

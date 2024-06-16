@@ -7,7 +7,7 @@ import { useQuery } from '@apollo/client';
 import { socket } from '../../socket';
 import Background from '../../components/background';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
-
+import { Link } from 'react-router-dom';
 
 function DirectMessage () {
    const {chatId} = useParams();
@@ -54,7 +54,9 @@ function DirectMessage () {
               <AppBar borderRadius={2} position="static" disableGutters>
                   <Container maxWidth='xl' disableGutters>
                       <Box mx={1} my={2}>
+                        <Link to={'/'}>
                           <ArrowBackIcon sx={{ width: '3rem', height: '2rem' }} onClick = {GoBack}></ArrowBackIcon>
+                        </Link>
                       </Box>
                   </Container>
               </AppBar>
