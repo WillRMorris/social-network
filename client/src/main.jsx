@@ -42,7 +42,7 @@ const router = createBrowserRouter([
         element: <MessageDirectory />
       },
       {
-        path: '/Messages/chatId',
+        path: '/Messages/:chatId',
         element: <DirectMessage />
       }
     ]

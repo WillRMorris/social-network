@@ -7,7 +7,7 @@ const { expressMiddleware } = require('@apollo/server/express4');
 const { authMiddleware } = require('./utils/auth');
 const { typeDefs, resolvers } = require('./schemas');
 const db = require('./config/connection');
-const { User, Comment, Pixel } = require('./models');
+const { User, Message, Chat } = require('./models');
 
 const PORT = process.env.PORT || 3001;
 const app = express();
@@ -23,34 +23,41 @@ const io = new Server(httpServer, {
   }
 });
 
-const users = {};
 
 io.on('connection', (socket) => {
-  socket.on('new-user', (name) => {
-    users[socket.id] = name;
-    socket.broadcast.emit('user-connected', name);
-  });
-  socket.on('send-chat-message', (message) => {
-    const addComment = async () => {
-      const comment = await Comment.create({
-        commentText: message,
-        commentAuthor: users[socket.id],
-      });
+  // socket.on('new-user', (name) => {
+  //   socket.broadcast.emit('user-connected', name);
+  // });
+  socket.on('send-chat-message', ({messageText, chatId, username}) => {
+    const addmessages = async () => {
+        const message = await Message.create({
+          messageText: messageText,
+          messageAuthor: username,
+        });
 
-      await User.findOneAndUpdate(
-        { username: users[socket.id] },
-        { $addToSet: { comments: comment._id } }
-      );
+        //grab the chat and add the message id to the chat
+        let chat = await Chat.findOne({_id: chatId})
+        chat.history.push(message._id);
+        chat.save();
+        
+        //check for too many messages. Trim the history, then return an array of ids of the trimmed ids
+        let toDelete = chat.checkAndTrim();
 
-      return comment;
+        //this will usually only run once. It can handle an array incase something goes wrong
+        if(toDelete !== null){
+          for(i = 0; i< toDelete.length; i++){
+            Message.findOneAndDelete({_id: toDelete[i]});
+          }
+        }
+
+      return message;
     }
-    addComment();
-    socket.broadcast.emit('chat-message', { message, name: users[socket.id] });
+    addmessages();
+    socket.broadcast.emit('chat-message', { message: messageText, name: username, chatId });
   });
-  socket.on('disconnect', () => {
-    socket.broadcast.emit('user-disconnected', users[socket.id]);
-    delete users[socket.id];
-  });
+  // socket.on('disconnect', () => {
+  //   socket.broadcast.emit('user-disconnected');
+  // });
 });
 
 const startApolloServer = async () => {

@@ -37,7 +37,7 @@ function Header() {
 
   const handlePageChange = (e) => {
     setAnchorElUser(null);
-    if(e.target.key != 'logout') {
+    if(e.target.textContent != 'Logout') {
       window.location.assign(`/${e.target.textContent}`)
     } else{
       auth.logout();

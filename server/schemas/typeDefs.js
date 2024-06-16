@@ -4,7 +4,7 @@ const typeDefs = `
     username: String
     email: String
     password: String
-    chatList: [ID]
+    chatList: [ID!]
   }
 
   type Message {
@@ -40,14 +40,14 @@ const typeDefs = `
     messages(username: String): [Message]
     message(messageId: ID!): Message
     me: User
-    chat (chatId: ID!): Chat
+    chat (chatId: ID): Chat
     chats: [ChatPreview]
   }
 
   type Mutation {
     addUser(username: String!, email: String!, password: String!): Auth
     login(email: String!, password: String!): Auth
-    addMessage(messageText: String! chatId: ID!): Message
+    addMessage(messageText: String! chatId: ID): Message
     removeMessage(messageId: ID! chatId: ID!): Message
     createChat(users: [String]): Chat
   }

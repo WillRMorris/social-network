@@ -4,7 +4,7 @@ import {socket} from '../../socket';
 import { useQuery} from '@apollo/client';
 import { CHAT} from '../../utils/queries';
 import {useParams} from 'react-router-dom';
-import {List, ListItemText, Divider, Grid, TextField, Button} from '@mui/material';
+import {List, Box, ListItemText, Divider, Grid, Container, TextField, Button} from '@mui/material';
 
 
 const chatStyle ={
@@ -18,57 +18,38 @@ const chatTabStyle={
     bgolor: "secondary.main",
     padding: 0,
     alignItems: "center",
-    justifyContent: "center"
+    justifyContent: "center",
+    marginTop: '1rem'
 }
 
-const Chat = ({socket}) => {
+const Chat = ({socket, setChat, chat, data }) => {
     const [message, setMessage] = useState('');
-    const [chat, setChat] = useState([]);
-    const [name, setName] = useState('');
+    const [name, setName] = useState(Auth.getProfile().data.username);
     const scrollRef = useRef(null);
     const {chatId} = useParams();
-    const {loading, error, data} = useQuery(CHAT, {
-        variables: {
-            chatId: chatId
-        }
-    });
-
     if(!Auth.loggedIn()){
-        return null;
+        window.location.assign('/')
     }
 
-    useEffect(() => {
-        if(data){
-            let oldChat = [];
-            for(let i = 0; i < data.chat.history.length; i++){
-                oldChat.push(`${data.chat.history[i].commentAuthor}: ${data.chat.history[i].commentText}`)
-            }
-            oldChat.reverse();
-            setChat(oldChat);
-        }
-    }, [data])
+
 
     useEffect(() => {
-        setName(Auth.getProfile().data.username);
-        socket.emit('new-user', Auth.getProfile().data.username);
+        // setName(Auth.getProfile().data.username);
+        socket.emit('new-user', name);
     },[])
 
     useEffect(() => {
         socket.on('chat-message', (data) => {
-            setChat(chat => [...chat, `${data.name}: ${data.message}`])
-        });
-        socket.on('user-connected', (name) => {
-            setChat(chat => [...chat, `${name} active`]);
-        });
-        socket.on('user-disconnected', (name) => {
-            setChat(chat => [...chat, `${name} inactive`]);
+            if(data.chatId == chatId){
+                setChat(chat => [...chat, `${data.name}: ${data.message}`])
+            }
         });
     }, []);
 
     const sendMessage = (e) => {
         e.preventDefault();
         if(!message) return;
-        socket.emit('send-chat-message', message);
+        socket.emit('send-chat-message', {messageText: message, chatId: chatId, username: name});
         setChat([...chat, `You: ${message}`]);
         setMessage('');
     };
@@ -91,6 +72,7 @@ const Chat = ({socket}) => {
                     ))}
                     <li ref={scrollRef}/>
             </List>
+
             <Grid container id="send-container" sx={chatTabStyle}>
                 <Grid item xs={9}>
                     <TextField

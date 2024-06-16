@@ -9,7 +9,7 @@ function ChatPreview ({chat}){
     
     //ensures the display message is of an acceptable length
     useEffect(()=>{
-        if(chat.lastMessage.messageText.length > 80){
+        if(chat.lastMessage.messageTest && chat.lastMessage.messageText.length > 80){
             setPreview(chat.lastMessage.messageText.slice(0, 80)+ '...')
         } else{
             setPreview(chat.lastMessage.messageText); 

@@ -54,8 +54,18 @@ export const CHAT = gql`
       _id
       users
       chatName
-      history
-      lastMessage
+      history {
+        _id
+        messageText
+        messageAuthor
+        createdAt
+      }
+      lastMessage{
+        _id
+        messageText
+        messageAuthor
+        createdAt
+      }
       lastUpdate
     }
   }
