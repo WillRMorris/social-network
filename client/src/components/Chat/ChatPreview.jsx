@@ -3,19 +3,19 @@ import { useState, useEffect } from 'react';
 import auth from '../../utils/auth';
 
 
-function ChatPreview ({chat}){
+function ChatPreview ({chat}, data){
     
-    let [preview, setPreview] = useState('');
+    const [preview, setPreview] = useState('');
     
     //ensures the display message is of an acceptable length
     useEffect(()=>{
-        if(chat.lastMessage.messageTest && chat.lastMessage.messageText.length > 80){
-            setPreview(chat.lastMessage.messageText.slice(0, 80)+ '...')
+        if(chat.lastMessage.messageText && chat.lastMessage.messageText.length > 50){
+            setPreview(chat.lastMessage.messageText.slice(0, 50)+ '...')
         } else{
             setPreview(chat.lastMessage.messageText); 
         }
         
-    },[])
+    },[data, chat])
     return (
         <>
             <Box>
@@ -32,7 +32,7 @@ function ChatPreview ({chat}){
                 variant="body2"
                 color="text.primary"
               >
-                {chat.lastMessage.messageAuthor || ' ' + '- '}
+                {chat.lastMessage.messageAuthor + ': '|| ' - '}
               </Typography>
               {preview}
             </>

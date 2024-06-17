@@ -53,7 +53,7 @@ io.on('connection', (socket) => {
       return message;
     }
     addmessages();
-    socket.broadcast.emit('chat-message', { message: messageText, name: username, chatId });
+    socket.broadcast.emit('chat-message', { message: messageText, name: username, chatId: chatId });
   });
   // socket.on('disconnect', () => {
   //   socket.broadcast.emit('user-disconnected');

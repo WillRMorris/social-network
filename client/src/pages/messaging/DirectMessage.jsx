@@ -8,10 +8,13 @@ import { socket } from '../../socket';
 import Background from '../../components/background';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { Link } from 'react-router-dom';
+import auth from '../../utils/auth';
+
 
 function DirectMessage () {
    const {chatId} = useParams();
    const [chat, setChat] = useState([]);
+   const [name, setName] = useState(auth.getProfile().data.username)
    
    
    const {loading, error, data} = useQuery(CHAT, {
@@ -21,17 +24,20 @@ function DirectMessage () {
    });
    useEffect(() => {
       if(data){
+         console.log(data)
          let oldChat = [];
          for(let i = 0; i < data.chat.history.length; i++){
-            oldChat.push(`${data.chat.history[i].messageAuthor}: ${data.chat.history[i].messageText}`)
+            if(data.chat.history[i].messageAuthor == name) {
+               oldChat.push({ msg:`${data.chat.history[i].messageText}`, you: true})
+            }else{
+               oldChat.push({ msg: `${data.chat.history[i].messageText}`, you: false, username:data.chat.history[i].messageAuthor})
+            }
          }
          setChat(oldChat);
       }
    }, [data])
-   
-   const GoBack = (e) =>{
-      window.location.assign('/');
-   }
+
+
    
    return (
       <>
@@ -41,21 +47,23 @@ function DirectMessage () {
       sx={{
       }}>
           <Box borderRadius={2} sx={{
-              bgcolor: 'background.paper',
               // marginTop: '5rem',
               // padding: '3rem',
               position: 'absolute',
               top: '2%',
               bottom: '2%',
-              right: '5%',
-              left: '5%',
-              boxShadow: 'rgba(0, 0, 0, 0.25) 0px 14px 28px, rgba(0, 0, 0, 0.22) 0px 10px 10px;'
+              right: '15%',
+              left: '15%',
+              '@media (max-width:800px)' : {
+               left: '5%',
+               right: '5%'
+              }
             }}>
               <AppBar borderRadius={2} position="static" disableGutters>
                   <Container maxWidth='xl' disableGutters>
                       <Box mx={1} my={2}>
-                        <Link to={'/'}>
-                          <ArrowBackIcon sx={{ width: '3rem', height: '2rem' }} onClick = {GoBack}></ArrowBackIcon>
+                        <Link to={'/Messages'}>
+                          <ArrowBackIcon sx={{ width: '3rem', height: '2rem', color: 'text.primary'}}></ArrowBackIcon>
                         </Link>
                       </Box>
                   </Container>

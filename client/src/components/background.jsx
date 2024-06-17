@@ -1,5 +1,5 @@
 
-function Background () {
+function Background ({ref}) {
 
 const style = {
     zIndex: -5, 
@@ -14,7 +14,7 @@ const style = {
     opacity: '60%'
 }
 
-    return <div style= {style}></div>
+    return <div ref={ref} style= {style} className="background"></div>
 }
 
 export default Background; 

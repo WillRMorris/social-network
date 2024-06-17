@@ -10,6 +10,7 @@ import Profile from './pages/settings/profile.jsx';
 import Account from './pages/settings/account.jsx';
 import MessageDirectory from './pages/messaging/MessageDirectory.jsx';
 import DirectMessage from './pages/messaging/DirectMessage.jsx';
+import CreateChat from './components/Chat/createChat.jsx';
 
 const router = createBrowserRouter([
   {
@@ -44,7 +45,7 @@ const router = createBrowserRouter([
       {
         path: '/Messages/:chatId',
         element: <DirectMessage />
-      }
+      },
     ]
   },
 ]);

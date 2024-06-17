@@ -64,7 +64,8 @@ const resolvers = {
     chat: async (parent,{chatId}, context) =>{
       if(context.user){
 
-        return await Chat.findOne({_id: chatId}).populate('history')
+        let chat = await Chat.findOne({_id: chatId}).populate('history').populate('lastMessage');
+        return chat
       } else{
         throw AuthenticationError;
       }
